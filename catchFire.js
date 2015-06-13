@@ -27,6 +27,17 @@ var catchFire = (function(){
 			}
 		},
 
+		unregister: function(catcher) {
+			// for each event we check if they have the catcher object
+			for (eventName in _catches) {
+				for ( var i=0; i<_catches[eventName].length; i++) {
+					if ( _catches[eventName][i]===catcher ) {
+						_catches[eventName].splice(i,1);
+					}
+				}
+			}
+		},
+
 		fire: function(eventName) {
 			if ( !_catches[eventName] ) {
 				return;

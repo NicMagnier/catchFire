@@ -23,9 +23,70 @@ the library will automatically register the callback functions to their respecti
 
 ## How to trigger a global event
 
-1/ Just fire the event
+Just fire the event
+
 ```javascript
 catchFire.fire('OpenDocument', doc);
 ```
 
 All the registered objects with a method called catchOpenDocument will be called (*as long as the method existed during the object registration*)
+
+## How to clean up
+
+when an object doesn't need to receive events (when deleted for example), simply unregister the object
+
+```javascript
+componentWillUnmount: function() {
+	catchFire.unregister(this);
+}
+```
+
+## React simple example
+
+```javascript
+var App = React.createClass({
+	getInitialState: function() {
+		return {
+			documentID: 'readme',
+			userID: 'nic',
+			userDisplayName: 'Nic Magnier'
+		}
+	},
+
+	componentDidMount: function() {
+		catchFire.register(this);
+	}
+
+	componentWillUnmount: function() {
+		catchFire.unregister(this);
+	}
+
+	catchNewDocumentSelected: function(docID) {
+		this.setState({documentID: docID});
+	},
+
+	catchSwitchUser: function(id, displayName) {
+		this.setState({userID: id, userDisplayName: displayName});
+	},
+
+	render: function() {
+		// Imagine a beautiful App there
+	}
+});
+
+var UserSelection = React.createClass({
+	handleClickOnUser: function(e) {
+		// switch the user of the app
+
+		// inform the rest of the interface the user changed
+		catchFire.fire('SwitchUser', this.state.currentUserId, this.state.userDisplayName);
+	},
+
+	render: function() {
+		// Picture an imaginative interface to select a user account
+	}
+});
+```
+
+
+

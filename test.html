@@ -20,13 +20,18 @@
 <body>
 	<div class="red"></div>
 	<div class="blue"></div>
-	<div class="red blue"></div>
+	<div class="red blue" id="toUnregister"></div>
 	<button onClick="catchFire.fire('CallRed');">Call the reds</button>
 	<button onClick="catchFire.fire('CallBlue');">Call the blues</button>
+	<button onClick="catchFire.unregister(document.getElementById('toUnregister'));">Unregister purple</button>
 </body>
 </html>
 
 <script>
+function unregisterPurple() {
+
+}
+
 (function() {
 	var reds = document.getElementsByClassName('red');
 	for ( var i=0; i<reds.length; i++) {
