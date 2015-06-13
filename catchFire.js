@@ -1,62 +1,44 @@
 
-var catchFire = {
-	prefix: 'catch',
-	catches: [],
+var catchFire = (function(){
+	var _prefix = 'catch';
+	var _catches = [];
 
-	register: function(catcher) {
-		// if this is not an object (or an array) we simply leave it here
-		if ( (typeof catcher)!=='object' ) {
-			return;
-		}
+	return {
+		register: function(catcher) {
+			// Let's check all the properties of the object and register the ones that start with the prefix
+			for (prop in catcher) {
+				if ( catcher.hasOwnProperty(prop) && prop.slice(0,_prefix.length)===_prefix ) {
+					var eventName = prop.slice(_prefix.length);
 
-		// if we receive an array, we register every object in it
-		if ( Object.prototype.toString.call(catcher)==='[object Array]' ) {
-			for ( var i=0; i<catcher.length; i++) {
-				catchFire.register(catcher[i]);
-			}
-			return;
-		}
-
-		// Let's check all the function of the object and register the catch functions
-		for (prop in catcher) {
-			if ( catcher.hasOwnProperty(prop) && (typeof catcher[prop])==='function' ) {
-
-				// If this is a catch function, we add the object to the event name
-				if ( prop.slice(0,catchFire.prefix.length)===catchFire.prefix ) {
-					var eventName = prop.slice(catchFire.prefix.length);
-
-					if ( (typeof catchFire.catches[eventName])==='undefined' ) {
-						catchFire.catches[eventName] = [];
+					if ( !_catches[eventName] ) {
+						_catches[eventName] = [];
 					}
-					catchFire.catches[eventName].push(catcher);
+					_catches[eventName].push(catcher);
+				} 
+			}
+		},
+
+		fire: function(eventName) {
+			if ( !_catches[eventName] ) {
+				return;
+			}
+
+			for ( var i=0; i<_catches[eventName].length; i++) {
+				var catcher = _catches[eventName][i];
+
+				if ( (typeof catcher[_prefix+eventName])==='function' ) {
+					// We create a new arguments array without the name of the event
+					var args = [];
+					for (p in arguments) {
+						args.push(arguments[p]);
+					}
+					args.shift();
+
+					// We call the ctaching function
+					catcher[_prefix+eventName].apply(catcher, args);
 				}
-			} 
-		}
-	},
-
-	fire: function(eventName) {
-		var i, args, catcher;
-
-		if ( (typeof catchFire.catches[eventName])!=='object' ) {
-			return;
-		}
-
-		for ( i=0; i<catchFire.catches[eventName].length; i++) {
-			catcher = catchFire.catches[eventName][i];
-
-			if ( (typeof catcher[catchFire.prefix+eventName])==='function' ) {
-
-				// We create a new arguments array without the name of the event
-				args = [];
-				for (p in arguments) {
-					args.push(arguments[p]);
-				}
-				args.shift();
-
-				// We call the ctaching function
-				catcher[catchFire.prefix+eventName].apply(catcher, args);
 			}
 		}
-	}
 
-};
+	};
+})();

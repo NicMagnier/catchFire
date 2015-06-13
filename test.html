@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="catchFire.js"></script>
+	<style type="text/css">
+		div {
+			height: 32px;
+		}
+		div.blue {
+			background-color: blue;
+		}
+		div.red {
+			background-color: red;
+		}
+		div.red.blue {
+			background-color: purple;
+		}
+	</style>
+</head>
+<body>
+	<div class="red"></div>
+	<div class="blue"></div>
+	<div class="red blue"></div>
+	<button onClick="catchFire.fire('CallRed');">Call the reds</button>
+	<button onClick="catchFire.fire('CallBlue');">Call the blues</button>
+</body>
+</html>
+
+<script>
+(function() {
+	var reds = document.getElementsByClassName('red');
+	for ( var i=0; i<reds.length; i++) {
+		reds[i].catchCallRed = function() {
+			this.innerText+= 'red ';
+		}
+	}
+
+	var blues = document.getElementsByClassName('blue');
+	for ( var i=0; i<blues.length; i++) {
+		blues[i].catchCallBlue = function() {
+			this.innerText+= 'blue ';
+		}
+	}
+
+	var divs = document.getElementsByTagName("div");
+	for ( var i=0; i<divs.length; i++) {
+		catchFire.register(divs[i]);
+	}
+})();
+</script>
