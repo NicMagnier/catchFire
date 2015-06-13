@@ -6,13 +6,22 @@ var catchFire = (function(){
 	return {
 		register: function(catcher) {
 			// Let's check all the properties of the object and register the ones that start with the prefix
-			for (prop in catcher) {
+			checkProperties: for (prop in catcher) {
 				if ( catcher.hasOwnProperty(prop) && prop.slice(0,_prefix.length)===_prefix ) {
 					var eventName = prop.slice(_prefix.length);
 
 					if ( !_catches[eventName] ) {
 						_catches[eventName] = [];
 					}
+
+					// check if the catcher is already registered
+					for ( var i=0; i<_catches[eventName].length; i++) {
+						if ( _catches[eventName][i]===catcher ) {
+							continue checkProperties;
+						}
+					}
+
+					// add the catcher to the event
 					_catches[eventName].push(catcher);
 				} 
 			}

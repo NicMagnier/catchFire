@@ -31,20 +31,23 @@
 	var reds = document.getElementsByClassName('red');
 	for ( var i=0; i<reds.length; i++) {
 		reds[i].catchCallRed = function() {
-			this.innerText+= 'red ';
+			this.innerText+= 'red_';
 		}
+		catchFire.register(reds[i]);
 	}
 
 	var blues = document.getElementsByClassName('blue');
 	for ( var i=0; i<blues.length; i++) {
 		blues[i].catchCallBlue = function() {
-			this.innerText+= 'blue ';
+			this.innerText+= 'blue_';
 		}
+		catchFire.register(blues[i]);
 	}
-
+/*
 	var divs = document.getElementsByTagName("div");
 	for ( var i=0; i<divs.length; i++) {
 		catchFire.register(divs[i]);
 	}
+*/
 })();
 </script>
