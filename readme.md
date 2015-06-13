@@ -55,11 +55,11 @@ var App = React.createClass({
 
 	componentDidMount: function() {
 		catchFire.register(this);
-	}
+	},
 
 	componentWillUnmount: function() {
 		catchFire.unregister(this);
-	}
+	},
 
 	catchNewDocumentSelected: function(docID) {
 		this.setState({documentID: docID});
